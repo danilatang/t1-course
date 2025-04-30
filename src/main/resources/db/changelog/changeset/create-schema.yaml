@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: V001
+      author: danilatang
+      changes:
+        - sql:
+            sql: "CREATE SCHEMA IF NOT EXISTS tasks_schema"
