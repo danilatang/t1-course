@@ -1,8 +1,8 @@
 package org.example.t1coursetask1.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.t1coursetask1.DTO.request.TaskDtoRequest;
-import org.example.t1coursetask1.DTO.response.TaskDtoResponse;
+import org.example.t1coursetask1.dto.request.TaskDtoRequest;
+import org.example.t1coursetask1.dto.response.TaskDtoResponse;
 import org.example.t1coursetask1.aspect.annotation.ExceptionHandling;
 import org.example.t1coursetask1.aspect.annotation.Loggable;
 import org.example.t1coursetask1.mapper.TaskMapper;
@@ -12,7 +12,6 @@ import org.example.t1coursetask1.services.TaskService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +50,7 @@ public class TaskServiceImpl implements TaskService {
     @ExceptionHandling
     public List<TaskDtoResponse> getTasks() {
         List<TaskEntity> tasks = taskRepository.findAll();
-        return tasks.stream().map(taskMapper::toTaskDtoResponse).collect(Collectors.toList());
+        return tasks.stream().map(taskMapper::toTaskDtoResponse).toList();
     }
 
     @Loggable

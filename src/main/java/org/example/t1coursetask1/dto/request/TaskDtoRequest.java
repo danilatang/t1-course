@@ -1,4 +1,4 @@
-package org.example.t1coursetask1.DTO.request;
+package org.example.t1coursetask1.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

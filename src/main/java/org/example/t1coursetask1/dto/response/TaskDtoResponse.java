@@ -1,4 +1,4 @@
-package org.example.t1coursetask1.DTO.response;
+package org.example.t1coursetask1.dto.response;
 
 import lombok.Getter;
 import lombok.Setter;

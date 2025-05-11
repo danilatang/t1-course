@@ -1,13 +1,11 @@
 package org.example.t1coursetask1.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.example.t1coursetask1.DTO.request.TaskDtoRequest;
-import org.example.t1coursetask1.DTO.response.TaskDtoResponse;
+import org.example.t1coursetask1.dto.request.TaskDtoRequest;
+import org.example.t1coursetask1.dto.response.TaskDtoResponse;
 import org.example.t1coursetask1.services.TaskService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -17,28 +15,29 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<TaskDtoResponse> createTask(@RequestBody TaskDtoRequest taskDtoRequest) {
-        return new ResponseEntity<>(taskService.createTask(taskDtoRequest), HttpStatus.OK);
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskDtoResponse createTask(@RequestBody TaskDtoRequest taskDtoRequest) {
+        return taskService.createTask(taskDtoRequest);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDtoResponse> getTaskById(@PathVariable String id) {
-        return new ResponseEntity<>(taskService.getTaskById(id), HttpStatus.OK);
+    public TaskDtoResponse getTaskById(@PathVariable String id) {
+        return taskService.getTaskById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<TaskDtoResponse> updateTask(@PathVariable String id, @RequestBody TaskDtoRequest taskDtoRequest) {
-        return new ResponseEntity<>(taskService.updateTask(id, taskDtoRequest), HttpStatus.OK);
+    public TaskDtoResponse updateTask(@PathVariable String id, @RequestBody TaskDtoRequest taskDtoRequest) {
+        return taskService.updateTask(id, taskDtoRequest);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable String id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTask(@PathVariable String id) {
         taskService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskDtoResponse>> getTasks() {
-        return new ResponseEntity<>(taskService.getTasks(), HttpStatus.OK);
+    public List<TaskDtoResponse> getTasks() {
+        return taskService.getTasks();
     }
 }

@@ -1,7 +1,7 @@
 package org.example.t1coursetask1.mapper;
 
-import org.example.t1coursetask1.DTO.request.TaskDtoRequest;
-import org.example.t1coursetask1.DTO.response.TaskDtoResponse;
+import org.example.t1coursetask1.dto.request.TaskDtoRequest;
+import org.example.t1coursetask1.dto.response.TaskDtoResponse;
 import org.example.t1coursetask1.models.TaskEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
