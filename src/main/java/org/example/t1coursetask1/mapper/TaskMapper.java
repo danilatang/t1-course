@@ -12,11 +12,13 @@ import org.mapstruct.MappingTarget;
 public interface TaskMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "status", ignore = true)
     TaskEntity toTaskEntity(TaskDtoRequest createTaskDtoRequest);
 
     TaskDtoResponse toTaskDtoResponse(TaskEntity taskEntity);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "userId", ignore = true)
+    @Mapping(target = "status", ignore = true)
     TaskEntity toTaskEntityFromPutTaskDto(@MappingTarget TaskEntity taskEntity, TaskDtoRequest createTaskDtoRequest);
 }
