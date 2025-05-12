@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: V003
+      author: danilatang
+      changes:
+        - addColumn:
+            tableName: tasks
+            schemaName: tasks_schema
+            columns:
+              - column:
+                  name: status
+                  type: varchar(255)

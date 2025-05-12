@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.t1coursetask1.constants.TaskStatus;
 
 @Entity
 @Getter
@@ -26,4 +27,8 @@ public class TaskEntity {
 
     @Column(name = "user_id", nullable = false)
     private String userId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
+    private TaskStatus status;
 }
