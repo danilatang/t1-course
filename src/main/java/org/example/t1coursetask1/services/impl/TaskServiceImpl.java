@@ -1,0 +1,62 @@
+package org.example.t1coursetask1.services.impl;
+
+import lombok.RequiredArgsConstructor;
+import org.example.t1coursetask1.dto.request.TaskDtoRequest;
+import org.example.t1coursetask1.dto.response.TaskDtoResponse;
+import org.example.t1coursetask1.aspect.annotation.ExceptionHandling;
+import org.example.t1coursetask1.aspect.annotation.Loggable;
+import org.example.t1coursetask1.mapper.TaskMapper;
+import org.example.t1coursetask1.models.TaskEntity;
+import org.example.t1coursetask1.repositories.TaskRepository;
+import org.example.t1coursetask1.services.TaskService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class TaskServiceImpl implements TaskService {
+    private final TaskRepository taskRepository;
+
+    private final TaskMapper taskMapper;
+
+    @Transactional
+    @Loggable
+    @ExceptionHandling
+    public TaskDtoResponse createTask(TaskDtoRequest taskDtoRequest) {
+        TaskEntity task = taskMapper.toTaskEntity(taskDtoRequest);
+        task.setUserId("user");
+        taskRepository.save(task);
+
+        return taskMapper.toTaskDtoResponse(task);
+    }
+
+    @Loggable
+    @ExceptionHandling
+    public TaskDtoResponse getTaskById(String taskId) {
+        return taskMapper.toTaskDtoResponse(taskRepository.findById(Long.valueOf(taskId)).orElseThrow());
+    }
+
+    @Transactional
+    @Loggable
+    @ExceptionHandling
+    public TaskDtoResponse updateTask(String taskId, TaskDtoRequest taskDtoRequest) {
+        TaskEntity task = taskMapper.toTaskEntityFromPutTaskDto(taskRepository.findById(Long.valueOf(taskId)).orElseThrow(), taskDtoRequest);
+
+        return taskMapper.toTaskDtoResponse(task);
+    }
+
+    @Loggable
+    @ExceptionHandling
+    public List<TaskDtoResponse> getTasks() {
+        List<TaskEntity> tasks = taskRepository.findAll();
+        return tasks.stream().map(taskMapper::toTaskDtoResponse).toList();
+    }
+
+    @Loggable
+    @ExceptionHandling
+    public void deleteUser(String id) {
+        TaskEntity task = taskRepository.findById(Long.valueOf(id)).orElseThrow();
+        taskRepository.delete(task);
+    }
+}

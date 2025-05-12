@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/create-schema.yaml
+  - include:
+      file: db/changelog/changeset/create_tasks_entity_table.yaml
