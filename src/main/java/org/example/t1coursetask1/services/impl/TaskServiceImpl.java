@@ -46,9 +46,12 @@ public class TaskServiceImpl implements TaskService {
     @Loggable
     @ExceptionHandling
     public TaskDtoResponse updateTask(String taskId, TaskDtoRequest taskDtoRequest) {
-        TaskEntity task = taskMapper.toTaskEntityFromPutTaskDto(taskRepository.findById(Long.valueOf(taskId)).orElseThrow(), taskDtoRequest);
+        TaskEntity existingTask = taskRepository.findById(Long.valueOf(taskId))
+                .orElseThrow();
+        TaskEntity task = taskMapper.toTaskEntityFromPutTaskDto(existingTask, taskDtoRequest);
         if (taskDtoRequest.getStatus() != null && taskDtoRequest.getStatus() != task.getStatus()) {
             task.setStatus(taskDtoRequest.getStatus());
+            taskRepository.save(task);
             taskProducerEvent.produce(taskMapper.toTaskDtoResponse(task));
         }
         return taskMapper.toTaskDtoResponse(task);
