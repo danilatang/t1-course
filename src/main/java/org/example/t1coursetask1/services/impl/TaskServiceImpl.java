@@ -1,10 +1,12 @@
 package org.example.t1coursetask1.services.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.t1coursetask1.constants.TaskStatus;
 import org.example.t1coursetask1.dto.request.TaskDtoRequest;
 import org.example.t1coursetask1.dto.response.TaskDtoResponse;
 import org.example.t1coursetask1.aspect.annotation.ExceptionHandling;
 import org.example.t1coursetask1.aspect.annotation.Loggable;
+import org.example.t1coursetask1.kafka.producer.TaskProducerEvent;
 import org.example.t1coursetask1.mapper.TaskMapper;
 import org.example.t1coursetask1.models.TaskEntity;
 import org.example.t1coursetask1.repositories.TaskRepository;
@@ -20,12 +22,15 @@ public class TaskServiceImpl implements TaskService {
 
     private final TaskMapper taskMapper;
 
+    private final TaskProducerEvent taskProducerEvent;
+
     @Transactional
     @Loggable
     @ExceptionHandling
     public TaskDtoResponse createTask(TaskDtoRequest taskDtoRequest) {
         TaskEntity task = taskMapper.toTaskEntity(taskDtoRequest);
         task.setUserId("user");
+        task.setStatus(TaskStatus.NEW);
         taskRepository.save(task);
 
         return taskMapper.toTaskDtoResponse(task);
@@ -41,8 +46,14 @@ public class TaskServiceImpl implements TaskService {
     @Loggable
     @ExceptionHandling
     public TaskDtoResponse updateTask(String taskId, TaskDtoRequest taskDtoRequest) {
-        TaskEntity task = taskMapper.toTaskEntityFromPutTaskDto(taskRepository.findById(Long.valueOf(taskId)).orElseThrow(), taskDtoRequest);
-
+        TaskEntity existingTask = taskRepository.findById(Long.valueOf(taskId))
+                .orElseThrow();
+        TaskEntity task = taskMapper.toTaskEntityFromPutTaskDto(existingTask, taskDtoRequest);
+        if (taskDtoRequest.getStatus() != null && taskDtoRequest.getStatus() != task.getStatus()) {
+            task.setStatus(taskDtoRequest.getStatus());
+            taskRepository.save(task);
+            taskProducerEvent.produce(taskMapper.toTaskDtoResponse(task));
+        }
         return taskMapper.toTaskDtoResponse(task);
     }
 

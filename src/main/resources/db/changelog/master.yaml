@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changeset/create-schema.yaml
   - include:
       file: db/changelog/changeset/create_tasks_entity_table.yaml
+  - include:
+      file: db/changelog/changeset/alter-add-status-column.yaml

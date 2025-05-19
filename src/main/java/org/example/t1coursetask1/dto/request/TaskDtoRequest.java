@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.t1coursetask1.constants.TaskStatus;
 
 @Getter
 @Setter
@@ -13,4 +14,6 @@ public class TaskDtoRequest {
     private String title;
 
     private String description;
+
+    private TaskStatus status;
 }
