@@ -1,11 +1,10 @@
 package org.example.t1coursetask1.services.impl;
 
+import com.example.annotation.HttpLogging;
 import lombok.RequiredArgsConstructor;
 import org.example.t1coursetask1.constants.TaskStatus;
 import org.example.t1coursetask1.dto.request.TaskDtoRequest;
 import org.example.t1coursetask1.dto.response.TaskDtoResponse;
-import org.example.t1coursetask1.aspect.annotation.ExceptionHandling;
-import org.example.t1coursetask1.aspect.annotation.Loggable;
 import org.example.t1coursetask1.kafka.producer.TaskProducerEvent;
 import org.example.t1coursetask1.mapper.TaskMapper;
 import org.example.t1coursetask1.models.TaskEntity;
@@ -25,8 +24,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskProducerEvent taskProducerEvent;
 
     @Transactional
-    @Loggable
-    @ExceptionHandling
+    @HttpLogging
     public TaskDtoResponse createTask(TaskDtoRequest taskDtoRequest) {
         TaskEntity task = taskMapper.toTaskEntity(taskDtoRequest);
         task.setUserId("user");
@@ -36,15 +34,13 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toTaskDtoResponse(task);
     }
 
-    @Loggable
-    @ExceptionHandling
+    @HttpLogging
     public TaskDtoResponse getTaskById(String taskId) {
         return taskMapper.toTaskDtoResponse(taskRepository.findById(Long.valueOf(taskId)).orElseThrow());
     }
 
     @Transactional
-    @Loggable
-    @ExceptionHandling
+    @HttpLogging
     public TaskDtoResponse updateTask(String taskId, TaskDtoRequest taskDtoRequest) {
         TaskEntity existingTask = taskRepository.findById(Long.valueOf(taskId))
                 .orElseThrow();
@@ -57,15 +53,13 @@ public class TaskServiceImpl implements TaskService {
         return taskMapper.toTaskDtoResponse(task);
     }
 
-    @Loggable
-    @ExceptionHandling
+    @HttpLogging
     public List<TaskDtoResponse> getTasks() {
         List<TaskEntity> tasks = taskRepository.findAll();
         return tasks.stream().map(taskMapper::toTaskDtoResponse).toList();
     }
 
-    @Loggable
-    @ExceptionHandling
+    @HttpLogging
     public void deleteUser(String id) {
         TaskEntity task = taskRepository.findById(Long.valueOf(id)).orElseThrow();
         taskRepository.delete(task);
