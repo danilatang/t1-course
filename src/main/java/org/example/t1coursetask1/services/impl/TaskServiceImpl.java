@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.t1coursetask1.constants.TaskStatus;
 import org.example.t1coursetask1.dto.request.TaskDtoRequest;
 import org.example.t1coursetask1.dto.response.TaskDtoResponse;
+import org.example.t1coursetask1.exception.TaskNotFoundException;
 import org.example.t1coursetask1.kafka.producer.TaskProducerEvent;
 import org.example.t1coursetask1.mapper.TaskMapper;
 import org.example.t1coursetask1.models.TaskEntity;
@@ -36,14 +37,14 @@ public class TaskServiceImpl implements TaskService {
 
     @HttpLogging
     public TaskDtoResponse getTaskById(String taskId) {
-        return taskMapper.toTaskDtoResponse(taskRepository.findById(Long.valueOf(taskId)).orElseThrow());
+        return taskMapper.toTaskDtoResponse(taskRepository.findById(Long.valueOf(taskId)).orElseThrow(() -> new TaskNotFoundException(taskId)));
     }
 
     @Transactional
     @HttpLogging
     public TaskDtoResponse updateTask(String taskId, TaskDtoRequest taskDtoRequest) {
         TaskEntity existingTask = taskRepository.findById(Long.valueOf(taskId))
-                .orElseThrow();
+                .orElseThrow(() -> new TaskNotFoundException(taskId));
         TaskEntity task = taskMapper.toTaskEntityFromPutTaskDto(existingTask, taskDtoRequest);
         if (taskDtoRequest.getStatus() != null && taskDtoRequest.getStatus() != task.getStatus()) {
             task.setStatus(taskDtoRequest.getStatus());
@@ -61,7 +62,7 @@ public class TaskServiceImpl implements TaskService {
 
     @HttpLogging
     public void deleteUser(String id) {
-        TaskEntity task = taskRepository.findById(Long.valueOf(id)).orElseThrow();
+        TaskEntity task = taskRepository.findById(Long.valueOf(id)).orElseThrow(() -> new TaskNotFoundException(id));
         taskRepository.delete(task);
     }
 }
